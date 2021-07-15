@@ -1,4 +1,4 @@
 package itsol.mp.app.controllers;
 
-public class controller {
+public class MemberController {
 }
