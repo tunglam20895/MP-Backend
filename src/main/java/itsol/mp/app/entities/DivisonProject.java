@@ -11,10 +11,10 @@ public class DivisonProject {
 
     @ManyToOne
     @JoinColumn(name = "PROJECT_ID" ,referencedColumnName = "ID")
-    Projects projects;
+    Projects projectsDivison;
 
     @ManyToOne
-    @JoinColumn(name = "DIVISONID", referencedColumnName = "ID")
-    Divisons divisons;
+    @JoinColumn(name = "DIVISIONID", referencedColumnName = "ID")
+    Divisons divisonsProject;
 
 }

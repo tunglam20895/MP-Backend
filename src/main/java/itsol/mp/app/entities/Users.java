@@ -1,11 +1,13 @@
 package itsol.mp.app.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
 
 @Data
@@ -22,10 +24,27 @@ public class Users {
 
     @ManyToOne
     @JoinColumn(name = "DIVISION_ID",referencedColumnName = "ID")
+    Divisons divisions;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "manager",fetch =FetchType.LAZY)
     Divisons divisons;
 
-    @OneToOne(mappedBy = "users")
-    Divisons divison;
+    @JsonIgnore
+    @OneToMany(mappedBy = "reportUsers",fetch = FetchType.LAZY)
+    Collection<Reports> reports;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "projectUser",fetch = FetchType.LAZY)
+    Collection<ProjectUser> projectUsers;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usersRequest", fetch = FetchType.LAZY)
+    Collection<LeaveRequests> reqLeaveRequests;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usersApproved", fetch = FetchType.LAZY)
+    Collection<LeaveRequests> appLeaveRequests;
 
     @Column(name = "ROLE")
     String role;
