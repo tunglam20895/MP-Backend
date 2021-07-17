@@ -79,7 +79,7 @@ public class Users {
     @Column(name = "PERSONAL_ID")
     Long personalId;
 
-    @Column(name = "HOME_TOWN")
+    @Column(name = "HOME_TOWN_")
     String homeTown;
 
     @Column(name = "EDUCATION")
@@ -99,5 +99,8 @@ public class Users {
 
     @Column(name = "DATE_CREATED")
     Date dateCreated;
+
+    @Column(name = "BIRTH_DAY")
+    String birthDay;
 
 }

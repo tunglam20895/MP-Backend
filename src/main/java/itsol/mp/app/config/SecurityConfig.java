@@ -23,17 +23,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailService userDetailService;
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
-    }
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         // Sét đặt dịch vụ để tìm kiếm User trong Database.
         // Và sét đặt PasswordEncoder.
-        auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailService);
 //        auth.inMemoryAuthentication().withUser("lam").password("{noop}123").roles("ADMIN");
     }
 
@@ -57,9 +51,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/abc", "signin").permitAll()
-                .antMatchers("/admin","/member","/manager","/pm").hasAnyRole("ADMIN")
-                .antMatchers("/member").hasAnyRole("USER")
+                .antMatchers("/public/**").permitAll()
+                .antMatchers("/member/**","/pm/**","/manager/**","/admin/**").hasAnyRole("ADMIN")
+                .antMatchers("/member/**","/pm/**","/manager/**").hasAnyRole("MANAGER")
+                .antMatchers("/member/**","/pm/**").hasAnyRole("PM")
+                .antMatchers("/member/**").hasAnyRole("MEMBER")
                 .anyRequest().fullyAuthenticated()
                 .and().httpBasic();
     }
