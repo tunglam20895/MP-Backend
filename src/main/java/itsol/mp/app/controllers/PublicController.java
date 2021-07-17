@@ -57,7 +57,7 @@ public class PublicController {
         SimpleMailMessage msg = new SimpleMailMessage();
         int otp = OTP.nextInt(9999 - 1000);
         msg.setTo(email);
-        msg.setSubject("Xác NHẬN ĐĂNG KÝ");
+        msg.setSubject("XÁC NHẬN ĐĂNG KÝ");
         msg.setText("Mã OTP của bạn là " +otp + " vui lòng không chia sẻ mã với bất cứ ai để đảm bảo bảo mật thông tin của bạn!!!");
         javaMailSender.send(msg);
         return otp;
@@ -65,7 +65,14 @@ public class PublicController {
 
     @GetMapping("/hello")
     public List<Users> getAll(){
+        logger.info("abc");
         return userService.findAllUsers();
+    }
+
+    @GetMapping("/a")
+    public Users getAll(String username){
+        username = "admin";
+        return userService.findUserByUsername(username);
     }
 
 }

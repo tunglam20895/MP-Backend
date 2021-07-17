@@ -1,17 +1,17 @@
 package itsol.mp.app.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 @Entity
@@ -22,20 +22,21 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "DIVISION_ID",referencedColumnName = "ID")
+    @JoinColumn(name = "DIVISION_ID", referencedColumnName = "ID")
     Divisons divisions;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "manager",fetch =FetchType.LAZY)
+    @OneToOne(mappedBy = "manager", fetch = FetchType.LAZY)
     Divisons divisons;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "reportUsers",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reportUsers", fetch = FetchType.LAZY)
     Collection<Reports> reports;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "projectUser",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "projectUser", fetch = FetchType.LAZY)
     Collection<ProjectUser> projectUsers;
 
     @JsonIgnore
@@ -73,7 +74,7 @@ public class Users {
     @Column(name = "LAST_NAME")
     String lastName;
 
-    @Column (name = "TYPE")
+    @Column(name = "TYPE")
     Long type;
 
     @Column(name = "PERSONAL_ID")
