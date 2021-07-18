@@ -1,6 +1,9 @@
 package itsol.mp.app.utils;
 
+import net.bytebuddy.utility.RandomString;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Random;
 
 public class EncrytedPasswordUtils {
     // Encryte Password with BCryptPasswordEncoder
@@ -14,5 +17,9 @@ public class EncrytedPasswordUtils {
         String encrytedPassword = encrytePassword(password);
 
         System.out.println("Encryted Password: " + encrytedPassword);
+
+
     }
+
+
 }

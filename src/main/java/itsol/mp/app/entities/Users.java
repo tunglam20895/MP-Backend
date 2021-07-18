@@ -1,6 +1,7 @@
 package itsol.mp.app.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import itsol.mp.app.entities.enums.UserType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,6 +20,9 @@ import java.util.Date;
 public class Users {
 
     @Id
+    @Column(name = "ID")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERS_SEQ")
+//    @SequenceGenerator(name = "USERS_SEQ", sequenceName = "MP", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
@@ -76,6 +80,22 @@ public class Users {
 
     @Column(name = "TYPE")
     Long type;
+
+    @Transient
+    private UserType userType;
+
+    @PostLoad
+    void fillTransient() {
+        if (type >= 0  && type < 3) {
+            this.userType = UserType.of(type);
+        }
+    }
+    @PrePersist
+    void fillPersistent() {
+        if (userType != null) {
+            this.type = (long) userType.getType(type);
+        }
+    }
 
     @Column(name = "PERSONAL_ID")
     Long personalId;
