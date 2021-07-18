@@ -19,6 +19,7 @@ public class Divisons {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "MANAGER_ID",referencedColumnName = "ID")
     Users manager;

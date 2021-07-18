@@ -1,5 +1,6 @@
 package itsol.mp.app.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,10 +18,12 @@ public class DivisonProject {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "PROJECT_ID" ,referencedColumnName = "ID")
     Projects projectsDivison;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "DIVISIONID", referencedColumnName = "ID")
     Divisons divisonsProject;

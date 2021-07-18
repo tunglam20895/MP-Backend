@@ -1,17 +1,18 @@
 package itsol.mp.app.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import itsol.mp.app.entities.enums.UserType;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 @Entity
@@ -19,23 +20,27 @@ import java.util.Date;
 public class Users {
 
     @Id
+    @Column(name = "ID")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERS_SEQ")
+//    @SequenceGenerator(name = "USERS_SEQ", sequenceName = "MP", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "DIVISION_ID",referencedColumnName = "ID")
+    @JoinColumn(name = "DIVISION_ID", referencedColumnName = "ID")
     Divisons divisions;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "manager",fetch =FetchType.LAZY)
+    @OneToOne(mappedBy = "manager", fetch = FetchType.LAZY)
     Divisons divisons;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "reportUsers",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "reportUsers", fetch = FetchType.LAZY)
     Collection<Reports> reports;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "projectUser",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "projectUser", fetch = FetchType.LAZY)
     Collection<ProjectUser> projectUsers;
 
     @JsonIgnore
@@ -73,8 +78,24 @@ public class Users {
     @Column(name = "LAST_NAME")
     String lastName;
 
-    @Column (name = "TYPE")
+    @Column(name = "TYPE")
     Long type;
+
+    @Transient
+    private UserType userType;
+
+    @PostLoad
+    void fillTransient() {
+        if (type >= 0  && type < 3) {
+            this.userType = UserType.of(type);
+        }
+    }
+    @PrePersist
+    void fillPersistent() {
+        if (userType != null) {
+            this.type = (long) userType.getType(type);
+        }
+    }
 
     @Column(name = "PERSONAL_ID")
     Long personalId;
