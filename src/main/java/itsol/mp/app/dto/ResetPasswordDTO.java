@@ -1,4 +1,4 @@
-package itsol.mp.app.DTO;
+package itsol.mp.app.dto;
 
 import lombok.Data;
 
