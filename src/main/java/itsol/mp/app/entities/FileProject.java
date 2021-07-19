@@ -12,20 +12,23 @@ import javax.persistence.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 @Entity
-@Table(name = "DIVISIOB_PROJECT")
-public class DivisonProject {
+@Table(name = "FILE_PROJECT")
+public class FileProject {
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "PROJECT_ID" ,referencedColumnName = "ID")
-    Projects projectsDivison;
+    @JoinColumn(name = "FILE_ID",referencedColumnName = "ID")
+    Files fileProject;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "DIVISIONID", referencedColumnName = "ID")
-    Divisons divisonsProject;
+    @JoinColumn(name = "PROJECTS_ID",referencedColumnName = "ID")
+    Projects projectFile;
+
+    @Column(name="CATEGORY")
+    String category;
 
 }

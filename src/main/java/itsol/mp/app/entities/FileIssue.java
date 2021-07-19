@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -12,20 +13,19 @@ import javax.persistence.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 @Entity
-@Table(name = "DIVISIOB_PROJECT")
-public class DivisonProject {
+@Table(name = "FILE_ISSUE")
+public class FileIssue {
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "PROJECT_ID" ,referencedColumnName = "ID")
-    Projects projectsDivison;
+    @JoinColumn(name = "FILEID",referencedColumnName = "ID")
+    Files fileIssue;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "DIVISIONID", referencedColumnName = "ID")
-    Divisons divisonsProject;
-
+    @JoinColumn(name = "ISSUEID",referencedColumnName = "ID")
+    Issues issueFile;
 }

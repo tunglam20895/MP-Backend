@@ -1,16 +1,16 @@
 package itsol.mp.app.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 @Entity
@@ -31,6 +31,14 @@ public class Projects {
     @JsonIgnore
     @OneToMany(mappedBy = "projects",fetch = FetchType.LAZY)
     Collection<Reports> reports;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "projectFile",fetch = FetchType.LAZY)
+    Collection<FileProject> projectFile;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "issueProject",fetch = FetchType.LAZY)
+    Collection<Issues> projectIssue;
 
     @Column(name = "NAME")
     String name;

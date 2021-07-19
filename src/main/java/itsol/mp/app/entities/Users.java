@@ -51,6 +51,22 @@ public class Users {
     @OneToMany(mappedBy = "usersApproved", fetch = FetchType.LAZY)
     Collection<LeaveRequests> appLeaveRequests;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "uploader",fetch = FetchType.LAZY)
+    Files files;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "userCreated",fetch = FetchType.LAZY)
+    Issues issueUserCreated;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "userAssignee" ,fetch = FetchType.LAZY)
+    Collection<Issues> issueUserAssignee;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "userTimeLog",fetch = FetchType.LAZY)
+    Collection<TimeLog> timeLogUser;
+
     @Column(name = "ROLE")
     String role;
 
