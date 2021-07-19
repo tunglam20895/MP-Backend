@@ -1,8 +1,9 @@
 package itsol.mp.app.controllers;
 
-import itsol.mp.app.DTO.ResetPasswordDTO;
+import itsol.mp.app.dto.ResetPasswordDTO;
 import itsol.mp.app.entities.Users;
 import itsol.mp.app.entities.enums.UserType;
+import itsol.mp.app.repositories.UserRepository;
 import itsol.mp.app.services.UserService;
 import itsol.mp.app.utils.CustomErrorType;
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -108,5 +108,10 @@ public class PublicController {
         javaMailSender.send(message);
         return new ResponseEntity<Users> (user, HttpStatus.OK);
     }
+
+   @GetMapping("/authorization")
+    public String author(){
+        return "authorization";
+   }
 
 }

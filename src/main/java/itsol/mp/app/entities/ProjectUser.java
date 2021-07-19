@@ -1,13 +1,12 @@
 package itsol.mp.app.entities;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PACKAGE)
 
