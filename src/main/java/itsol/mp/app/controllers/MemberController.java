@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/member")
 public class MemberController {
-    @GetMapping("/member1")
+    @GetMapping("/getAuthor")
     public String helloMember(){
-        return "hello member";
+        return "hello aut";
     }
 }

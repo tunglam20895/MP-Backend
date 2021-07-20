@@ -49,8 +49,12 @@ public class UserService {
         return randomString;
     }
 
-    public Users findUserByUsernameAndEmail(String username,String email){
-        return userRepository.findByUsernameAndEmail(username,email);
+    public Users findUserByUsernameAndEmail(String username, String email) {
+        return userRepository.findByUsernameAndEmail(username, email);
+    }
+
+    public Users findUserByUsernameAndRole(String username) {
+        return userRepository.findByUsernameAndRole(username);
     }
 
 }
