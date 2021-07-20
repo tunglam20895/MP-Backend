@@ -1,13 +1,18 @@
 package itsol.mp.app.controllers;
 
 import itsol.mp.app.dto.ProjectDTO;
-import itsol.mp.app.repositories.UserRepository;
+import itsol.mp.app.dto.UserProjectDTO;
+import itsol.mp.app.entities.ProjectUser;
+import itsol.mp.app.entities.Projects;
+import itsol.mp.app.entities.Users;
 import itsol.mp.app.services.ProjectService;
+import itsol.mp.app.services.ProjectUserService;
+import itsol.mp.app.services.UserService;
+import itsol.mp.app.utils.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +33,47 @@ public class ProjectManagementController {
         }else {
             return projectService.getListProject();
         }
+    }
 
+    @GetMapping("/project-user/{id}")
+    public List<UserProjectDTO> getUserInProject(@PathVariable long id){
+    return projectService.getUserProject(id);
+    }
+
+    @Autowired
+    protected ProjectUserService projectUserService;
+
+    @DeleteMapping("/delete-user-project/{id}")
+    public void deleteUserProject(@PathVariable long id){
+        ProjectUser projectUser = projectUserService.findById(id);
+        projectUserService.deletePro(projectUser);
+    }
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/add-user/{id}")
+    public ResponseEntity<?> addUser(@RequestBody String username,@PathVariable long id){
+        Users users = userService.findUserByUsernameAndRole(username);
+        if(users == null){
+            return new ResponseEntity(
+                    new CustomErrorType("User " +username +" không hợp lệ"),HttpStatus.CONFLICT
+            );
+        }
+        Projects projects = projectService.findById(id);
+        ProjectUser projectUser = new ProjectUser();
+        projectUser.setProjectUser(users);
+        projectUser.setUserProject(projects);
+        projectUser.setIsPM((long) 0);
+        return new ResponseEntity(
+                projectUserService.addUserProject(projectUser),HttpStatus.CREATED
+        );
+
+    }
+
+    //test
+    @GetMapping("/a")
+    public List<UserProjectDTO> get(){
+        return projectService.getUserProject((long) 1);
     }
 }
