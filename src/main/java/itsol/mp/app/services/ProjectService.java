@@ -1,6 +1,7 @@
 package itsol.mp.app.services;
 
 import itsol.mp.app.dto.ProjectDTO;
+import itsol.mp.app.dto.TransferDTO;
 import itsol.mp.app.dto.UserProjectDTO;
 import itsol.mp.app.entities.Projects;
 import itsol.mp.app.repositories.ProjectRepository;
@@ -28,6 +29,10 @@ public class ProjectService {
 
     public Projects findById(long id){
         return projectRepository.findById(id);
+    }
+
+    public List<Projects> getTransferProject(Long id){
+        return projectRepository.findAllByIdNot(id);
     }
 
 }

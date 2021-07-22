@@ -2,6 +2,7 @@ package itsol.mp.app.controllers;
 
 import itsol.mp.app.dto.ResetPasswordDTO;
 import itsol.mp.app.entities.Users;
+import itsol.mp.app.entities.enums.UserStatus;
 import itsol.mp.app.entities.enums.UserType;
 import itsol.mp.app.repositories.UserRepository;
 import itsol.mp.app.services.UserService;
@@ -9,6 +10,7 @@ import itsol.mp.app.utils.CustomErrorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,6 +22,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -30,6 +36,10 @@ public class PublicController {
     public static final Logger logger = LoggerFactory.getLogger(PublicController.class);
 
     Random random = new Random();
+
+//    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    Date date = new Date();
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -56,7 +66,10 @@ public class PublicController {
         newUser.setRole("ROLE_MEMBER");
 
         newUser.setUserType(UserType.COLLABORATOR);
+        newUser.setUserStatus(UserStatus.PENDING);
         newUser.setPassword(encoder.encode(newUser.getPassword()));
+        newUser.setDateCreated(date);
+        System.out.println();
         return new ResponseEntity<Users>(userService.addUser(newUser), HttpStatus.CREATED);
     }
 

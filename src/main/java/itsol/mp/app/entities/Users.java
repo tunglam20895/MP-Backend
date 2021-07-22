@@ -1,9 +1,11 @@
 package itsol.mp.app.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import itsol.mp.app.entities.enums.UserStatus;
 import itsol.mp.app.entities.enums.UserType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -100,18 +102,32 @@ public class Users {
     @Transient
     private UserType userType;
 
+    @Column(name = "status")
+    Long status;
+
+    @Transient
+    private UserStatus userStatus;
+
     @PostLoad
-    void fillTransient() {
+    void fillTransientStatus() {
+        if (status >= 0  && status < 3) {
+            this.userStatus = UserStatus.of(status);
+        }
         if (type >= 0  && type < 3) {
             this.userType = UserType.of(type);
         }
     }
+
     @PrePersist
-    void fillPersistent() {
+    void fillPersistentStatus() {
+        if (userStatus != null) {
+            this.status = (long) userStatus.getStatus(status);
+        }
         if (userType != null) {
             this.type = (long) userType.getType(type);
         }
     }
+
 
     @Column(name = "PERSONAL_ID")
     Long personalId;
@@ -128,15 +144,14 @@ public class Users {
     @Column(name = "MAJOR")
     String major;
 
-    @Column(name = "status")
-    Long status;
-
     @Column(name = "DAY_OFF_LAST_YEAR")
     Long dayOffLastYear;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "DATE_CREATED")
     Date dateCreated;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "BIRTH_DAY")
     String birthDay;
 

@@ -8,7 +8,8 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PACKAGE)
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
 @Entity
 @Table(name = "PROJECT_USER")

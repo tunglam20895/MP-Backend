@@ -11,6 +11,7 @@ import itsol.mp.app.services.UserService;
 import itsol.mp.app.utils.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,24 +28,24 @@ public class ProjectManagementController {
 //    private UserRepository userRepository;
 
     @GetMapping("/list/{username}")
-    public List<ProjectDTO> getProject(@PathVariable String username){
-        if(projectService.getProjectByPM(username).size() > 0 ) {
+    public List<ProjectDTO> getProject(@PathVariable String username) {
+        if (projectService.getProjectByPM(username).size() > 0) {
             return projectService.getProjectByPM(username);
-        }else {
+        } else {
             return projectService.getListProject();
         }
     }
 
     @GetMapping("/project-user/{id}")
-    public List<UserProjectDTO> getUserInProject(@PathVariable long id){
-    return projectService.getUserProject(id);
+    public List<UserProjectDTO> getUserInProject(@PathVariable long id) {
+        return projectService.getUserProject(id);
     }
 
     @Autowired
     protected ProjectUserService projectUserService;
 
     @DeleteMapping("/delete-user-project/{id}")
-    public void deleteUserProject(@PathVariable long id){
+    public void deleteUserProject(@PathVariable long id) {
         ProjectUser projectUser = projectUserService.findById(id);
         projectUserService.deletePro(projectUser);
     }
@@ -53,11 +54,11 @@ public class ProjectManagementController {
     private UserService userService;
 
     @PostMapping("/add-user/{id}")
-    public ResponseEntity<?> addUser(@RequestBody String username,@PathVariable long id){
+    public ResponseEntity<?> addUser(@RequestBody String username, @PathVariable long id) {
         Users users = userService.findUserByUsernameAndRole(username);
-        if(users == null){
+        if (users == null) {
             return new ResponseEntity(
-                    new CustomErrorType("User " +username +" không hợp lệ"),HttpStatus.CONFLICT
+                    new CustomErrorType("User " + username + " không hợp lệ"), HttpStatus.CONFLICT
             );
         }
         Projects projects = projectService.findById(id);
@@ -66,14 +67,41 @@ public class ProjectManagementController {
         projectUser.setUserProject(projects);
         projectUser.setIsPM((long) 0);
         return new ResponseEntity(
-                projectUserService.addUserProject(projectUser),HttpStatus.CREATED
+                projectUserService.addUserProject(projectUser), HttpStatus.CREATED
         );
+    }
 
+    @GetMapping("/get-transfer-project/{id}")
+    public ResponseEntity<List<?>> getTransferProject(@PathVariable long id) {
+        return new ResponseEntity<>(
+                projectService.getTransferProject(id), HttpStatus.OK);
+    }
+
+    @PostMapping( "/transfer-user/{idNewProject}")
+    public ResponseEntity<?> transferUser(
+            @RequestBody UserProjectDTO transferUser, @PathVariable long idNewProject) {
+        System.out.println(transferUser.getUsername());
+        ProjectUser pu = projectUserService.findById(transferUser.getId());
+
+
+        ProjectUser newPu = new ProjectUser();
+        Users users = userService.findUserByUsername(transferUser.getUsername());
+        newPu.setProjectUser(users);
+        Projects projects = projectService.findById(idNewProject);
+        newPu.setUserProject(projects);
+        newPu.setIsPM((long)0);
+        ProjectUser addNewPu = projectUserService.addUserProject(newPu);
+        if(addNewPu != null){
+            projectUserService.deletePro(pu);
+        }
+        return new ResponseEntity<ProjectUser>(
+                addNewPu,HttpStatus.CREATED
+        );
     }
 
     //test
     @GetMapping("/a")
-    public List<UserProjectDTO> get(){
+    public List<UserProjectDTO> get() {
         return projectService.getUserProject((long) 1);
     }
 }

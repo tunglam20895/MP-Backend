@@ -14,6 +14,7 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Projects, Long> {
     Projects findByName(String name);
     Projects findById(long id);
+    List<Projects> findAllByIdNot(long id);
 
     @Query("select new itsol.mp.app.dto.ProjectDTO(p.id, p.name,p.description," +
             "p.dateStarted,p.dateEnd,u.firstName,u.lastName)" +
@@ -27,7 +28,7 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
             "    inner join Projects p on pu.userProject = p.id where u.role = 'ROLE_PM' and u.username = :p_username")
     List<ProjectDTO> getProjectByPM(@Param("p_username") String username);
 
-    @Query("select new itsol.mp.app.dto.UserProjectDTO(u.id,pu.id,u.avartar,u.firstName,u.lastName,u.email)" +
+    @Query("select new itsol.mp.app.dto.UserProjectDTO(u.id,pu.id,p.id,u.username,u.firstName,u.lastName,u.email)" +
             " from Users u inner join ProjectUser pu on u.id = pu.projectUser \n" +
             "    inner join Projects p on pu.userProject = p.id where u.role = 'ROLE_MEMBER' and p.id = :p_projectId")
     List<UserProjectDTO> getUserProject(@Param("p_projectId") Long id);
