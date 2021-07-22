@@ -89,13 +89,13 @@ public class ProjectManagementController {
         newPu.setProjectUser(users);
         Projects projects = projectService.findById(idNewProject);
         newPu.setUserProject(projects);
-        newPu.setIsPM((long)0);
+        newPu.setIsPM((long) 0);
         ProjectUser addNewPu = projectUserService.addUserProject(newPu);
-        if(addNewPu != null){
+        if (addNewPu != null) {
             projectUserService.deletePro(pu);
         }
         return new ResponseEntity<ProjectUser>(
-                addNewPu,HttpStatus.CREATED
+                addNewPu, HttpStatus.CREATED
         );
     }
 

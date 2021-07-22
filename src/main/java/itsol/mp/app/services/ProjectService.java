@@ -35,4 +35,8 @@ public class ProjectService {
         return projectRepository.findAllByIdNot(id);
     }
 
+    public List<Projects> getTransferProject(long id){
+        return projectRepository.findAllByIdNot(id);
+    }
+
 }

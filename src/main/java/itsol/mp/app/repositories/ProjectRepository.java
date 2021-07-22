@@ -16,6 +16,8 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
     Projects findById(long id);
     List<Projects> findAllByIdNot(long id);
 
+    List<Projects> findAllByIdNot(long id);
+
     @Query("select new itsol.mp.app.dto.ProjectDTO(p.id, p.name,p.description," +
             "p.dateStarted,p.dateEnd,u.firstName,u.lastName)" +
             " from Users u inner join ProjectUser pu on u.id = pu.projectUser \n" +
