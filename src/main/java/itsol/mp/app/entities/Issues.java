@@ -6,10 +6,11 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Date;
+
 @Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 @Entity
@@ -20,16 +21,15 @@ public class Issues {
     Long id;
 
     @JsonIgnore
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "USER_CREATED",referencedColumnName = "ID")
     Users userCreated;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "ASSIGNEE",referencedColumnName = "ID")
-    Users userAssignee;
+//    @JsonIgnore
+//    @ManyToOne
+//    @JoinColumn(name = "ASSIGNEE",referencedColumnName = "ID")
+//    Users userAssignee;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "PROJECTSID",referencedColumnName = "ID")
     Projects issueProject;
@@ -39,7 +39,7 @@ public class Issues {
     Collection<FileIssue> fileIssues;
 
     @Column(name = "STATUS")
-    Long status;
+    String status;
 
     @JsonIgnore
     @ManyToOne
@@ -54,4 +54,40 @@ public class Issues {
     @OneToMany(mappedBy = "issuesTimeLog",fetch = FetchType.LAZY)
     Collection<TimeLog> timeLogsIssue;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "issueComment",fetch = FetchType.LAZY)
+    Collection<Comments> comments;
+
+    @Column(name = "TYPE")
+    String type;
+
+    @Column(name = "TITLE")
+    String title;
+
+    @Column(name = "DESCRIPTION")
+    String description;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DATE_START")
+    Date dateStrarted;
+
+    @Column(name = "SOULUTION")
+    String soulution;
+
+    @Column(name = "PROGRESS")
+    Long progress;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DATE_END")
+    Date dateEnd;
+
+    @Column(name = "PRIORITY")
+    String priority;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DATE_UPDATE")
+    Date dateUpdate;
+
+    @Column(name = "TARGET")
+    String target;
 }

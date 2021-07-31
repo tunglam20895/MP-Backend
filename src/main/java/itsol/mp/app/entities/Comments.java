@@ -1,5 +1,6 @@
 package itsol.mp.app.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,20 +13,22 @@ import javax.persistence.*;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 @Entity
-@Table(name = "PROJECT_USER")
-public class ProjectUser {
+@Table(name = "COMMENTS")
+
+public class Comments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "PROJECTID",referencedColumnName = "ID")
-    Projects userProject;
+    @JoinColumn(name = "OWNER",referencedColumnName = "ID")
+    Users owner;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "USER_ID",referencedColumnName = "ID")
-    Users projectUser;
+    @JoinColumn(name = "ISSUESS_ID",referencedColumnName = "ID")
+    Issues issueComment;
 
-    @Column(name = "ISPM")
-    Long isPM;
+    @Column(name = "CONTENT")
+    String content;
 }

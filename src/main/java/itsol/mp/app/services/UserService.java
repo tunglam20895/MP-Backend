@@ -3,6 +3,7 @@ package itsol.mp.app.services;
 import itsol.mp.app.entities.Users;
 import itsol.mp.app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,14 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public Users findByRoleAdmin(String username) {
+        return userRepository.findByRole(username);
+    }
+
+    public List<String> findByPm(){
+        return userRepository.findByPM();
+    }
 
     public Users addUser(Users users) {
         return userRepository.save(users);
@@ -35,9 +44,9 @@ public class UserService {
     }
 
     public String getRamdomPassword() {
-        String characters = "QWERTYUIOPASDFGHJKLZXCVBNM";
+        String characters = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
         String randomString = "";
-        int length = 6;
+        int length = 8;
         Random random = new Random();
         char[] text = new char[length];
         for (int i = 0; i < length; i++) {

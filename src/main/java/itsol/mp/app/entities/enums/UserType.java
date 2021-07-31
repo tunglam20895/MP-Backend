@@ -11,10 +11,10 @@ public enum UserType {
         this.UserType = UserType;
     }
 
-
     public int getType(Long type) {
         return UserType;
     }
+
     public static UserType of(Long UserType) {
         return Stream.of(itsol.mp.app.entities.enums.UserType.values())
                 .filter(p -> p.getType(UserType) == UserType)

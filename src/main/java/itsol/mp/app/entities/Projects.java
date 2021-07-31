@@ -3,10 +3,13 @@ package itsol.mp.app.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -21,23 +24,23 @@ public class Projects {
     Long id;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "projectsDivison",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "projectsDivison", fetch = FetchType.LAZY)
     Collection<DivisonProject> divisonProjects;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "userProject",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userProject", fetch = FetchType.LAZY)
     Collection<ProjectUser> projectUsers;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "projects",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "projects", fetch = FetchType.LAZY)
     Collection<Reports> reports;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "projectFile",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "projectFile", fetch = FetchType.LAZY)
     Collection<FileProject> projectFile;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "issueProject",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "issueProject", fetch = FetchType.LAZY)
     Collection<Issues> projectIssue;
 
     @Column(name = "NAME")

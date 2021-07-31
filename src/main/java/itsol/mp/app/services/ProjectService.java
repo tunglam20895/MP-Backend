@@ -18,6 +18,10 @@ public class ProjectService {
         return projectRepository.getallProject();
     }
 
+    public Projects addProject(Projects projects){
+       return projectRepository.save(projects);
+    }
+
     public List<ProjectDTO> getProjectByPM(String username){
         return projectRepository.getProjectByPM(username);
     }
@@ -28,6 +32,14 @@ public class ProjectService {
 
     public Projects findById(long id){
         return projectRepository.findById(id);
+    }
+
+    public List<Projects> getTransferProject(Long id){
+        return projectRepository.findAllByIdNot(id);
+    }
+
+    public List<Projects> getProjectByUsername (String username){
+        return projectRepository.getProjectsByUsername(username);
     }
 
 }
