@@ -5,11 +5,11 @@ import itsol.mp.app.entities.enums.UserStatus;
 import itsol.mp.app.entities.enums.UserType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -28,7 +28,6 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "DIVISION_ID", referencedColumnName = "ID")
     Divisons divisions;
@@ -58,45 +57,49 @@ public class Users {
     Files files;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "userCreated",fetch = FetchType.LAZY)
-    Issues issueUserCreated;
+    @OneToMany(mappedBy = "userCreated",fetch = FetchType.LAZY)
+    Collection<Issues> issueUserCreated;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "userAssignee" ,fetch = FetchType.LAZY)
-    Collection<Issues> issueUserAssignee;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "userAssignee" ,fetch = FetchType.LAZY)
+//    Collection<Issues> issueUserAssignee;
 
     @JsonIgnore
     @OneToMany(mappedBy = "userTimeLog",fetch = FetchType.LAZY)
     Collection<TimeLog> timeLogUser;
 
-    @Column(name = "ROLE")
+    @JsonIgnore
+    @OneToMany(mappedBy = "owner",fetch = FetchType.LAZY)
+    List<Comments> comments;
+
+    @Column(name = "ROLE",nullable = true)
     String role;
 
-    @Column(name = "USERNAME")
+    @Column(name = "USERNAME",nullable = true)
     String username;
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD",nullable = true)
     String password;
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL",nullable = true)
     String email;
 
-    @Column(name = "PHONE")
+    @Column(name = "PHONE",nullable = true)
     Long phone;
 
-    @Column(name = "AVARTAR")
+    @Column(name = "AVARTAR",nullable = true)
     String avartar;
 
-    @Column(name = "FIRST_NAME")
+    @Column(name = "FIRST_NAME",nullable = true)
     String firstName;
 
-    @Column(name = "MIDDLE_NAME")
+    @Column(name = "MIDDLE_NAME",nullable = true)
     String middleName;
 
-    @Column(name = "LAST_NAME")
+    @Column(name = "LAST_NAME",nullable = true)
     String lastName;
 
-    @Column(name = "TYPE")
+    @Column(name = "TYPE",nullable = true)
     Long type;
 
     @Transient
@@ -129,30 +132,29 @@ public class Users {
     }
 
 
-    @Column(name = "PERSONAL_ID")
+    @Column(name = "PERSONAL_ID",nullable = true)
     Long personalId;
 
-    @Column(name = "HOME_TOWN_")
+    @Column(name = "HOME_TOWN_",nullable = true)
     String homeTown;
 
-    @Column(name = "EDUCATION")
+    @Column(name = "EDUCATION",nullable = true)
     String education;
 
-    @Column(name = "SCHOOL")
+    @Column(name = "SCHOOL",nullable = true)
     String school;
 
-    @Column(name = "MAJOR")
+    @Column(name = "MAJOR",nullable = true)
     String major;
 
-    @Column(name = "DAY_OFF_LAST_YEAR")
+    @Column(name = "DAY_OFF_LAST_YEAR",nullable = true)
     Long dayOffLastYear;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "DATE_CREATED")
     Date dateCreated;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @Column(name = "BIRTH_DAY")
-    String birthDay;
+    @Column(name="GENDER")
+    String gender;
 
 }

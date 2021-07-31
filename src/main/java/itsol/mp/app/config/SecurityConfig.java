@@ -35,7 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // Sét đặt dịch vụ để tìm kiếm User trong Database.
         // Và sét đặt PasswordEncoder.
         auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
-        auth.inMemoryAuthentication().withUser("lam").password("{noop}123").roles("ADMIN");
     }
 
     @Bean
@@ -59,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers("/public/**").permitAll()
-                .antMatchers("/abc/**").hasAnyRole("MEMBER","PM","MANAGER","ADMIN")
+                .antMatchers("/profile/**","/issue/**").hasAnyRole("MEMBER","PM","MANAGER","ADMIN")
                 .antMatchers("/project/**").hasAnyRole("PM","MANAGER","ADMIN")
                 .antMatchers("/member/**").hasAnyRole("MANAGER","ADMIN")
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")

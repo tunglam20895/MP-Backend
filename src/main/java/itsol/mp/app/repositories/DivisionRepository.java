@@ -6,4 +6,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping
 public interface DivisionRepository extends JpaRepository<Divisons,Long> {
+    Divisons findDivisonsById(long id);
 }

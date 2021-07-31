@@ -13,6 +13,12 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<Users, Long> {
     Users findByUsername(String username);
 
+    @Query("select username from Users where role = 'ROLE_PM'")
+    List<String> findByPM();
+
+    @Query("from Users where (role = 'ROLE_ADMIN' or role = 'ROLE_MANAGER') and username = :p_username")
+    Users findByRole(@Param("p_username") String username);
+
     @Query("select role from Users where id = :p_id ")
     List<String> getRole(@Param("p_id") Long id);
 

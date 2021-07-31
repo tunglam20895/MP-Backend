@@ -19,7 +19,7 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
     @Query("select new itsol.mp.app.dto.ProjectDTO(p.id, p.name,p.description," +
             "p.dateStarted,p.dateEnd,u.firstName,u.lastName)" +
             " from Users u inner join ProjectUser pu on u.id = pu.projectUser \n" +
-            "    inner join Projects p on pu.userProject = p.id where u.role = 'ROLE_PM'")
+            "    inner join Projects p on pu.userProject = p.id where pu.isPM = 1")
     List<ProjectDTO> getallProject();
 
     @Query("select new itsol.mp.app.dto.ProjectDTO(p.id, p.name,p.description," +
@@ -33,5 +33,6 @@ public interface ProjectRepository extends JpaRepository<Projects, Long> {
             "    inner join Projects p on pu.userProject = p.id where u.role = 'ROLE_MEMBER' and p.id = :p_projectId")
     List<UserProjectDTO> getUserProject(@Param("p_projectId") Long id);
 
-
+    @Query("select p from Users u inner join ProjectUser pu on u.id = pu.projectUser inner join Projects p on pu.userProject=p.id where u.username = :p_username and (u.role= 'ROLE_MEMBER' or u.role='ROLE_PM')")
+    List<Projects> getProjectsByUsername(@Param("p_username") String username);
 }

@@ -1,5 +1,6 @@
 package itsol.mp.app.controllers;
 
+import itsol.mp.app.dto.AddProjectDTO;
 import itsol.mp.app.dto.ProjectDTO;
 import itsol.mp.app.dto.UserProjectDTO;
 import itsol.mp.app.entities.ProjectUser;
@@ -9,23 +10,28 @@ import itsol.mp.app.services.ProjectService;
 import itsol.mp.app.services.ProjectUserService;
 import itsol.mp.app.services.UserService;
 import itsol.mp.app.utils.CustomErrorType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/project")
 public class ProjectManagementController {
 
+    public static final Logger logger = LoggerFactory.getLogger(ProjectManagementController.class);
+
     @Autowired
     private ProjectService projectService;
 
-//    @Autowired
-//    private UserRepository userRepository;
+    @Autowired
+    private ProjectUserService projectUserService;
 
     @GetMapping("/list/{username}")
     public List<ProjectDTO> getProject(@PathVariable String username) {
@@ -37,12 +43,10 @@ public class ProjectManagementController {
     }
 
     @GetMapping("/project-user/{id}")
-    public List<UserProjectDTO> getUserInProject(@PathVariable long id) {
-        return projectService.getUserProject(id);
+    public ResponseEntity<List<?>> getUserInProject(@PathVariable long id) {
+        return new ResponseEntity<>(
+                projectService.getUserProject(id),HttpStatus.OK);
     }
-
-    @Autowired
-    protected ProjectUserService projectUserService;
 
     @DeleteMapping("/delete-user-project/{id}")
     public void deleteUserProject(@PathVariable long id) {
@@ -62,6 +66,11 @@ public class ProjectManagementController {
             );
         }
         Projects projects = projectService.findById(id);
+     if(projectUserService.findByMemberIdAndProId(users,projects) != null){
+         return new ResponseEntity(
+                 new CustomErrorType("User " + username + " đã tồn tại"), HttpStatus.CONFLICT
+         );
+     }
         ProjectUser projectUser = new ProjectUser();
         projectUser.setProjectUser(users);
         projectUser.setUserProject(projects);
@@ -80,9 +89,7 @@ public class ProjectManagementController {
     @PostMapping( "/transfer-user/{idNewProject}")
     public ResponseEntity<?> transferUser(
             @RequestBody UserProjectDTO transferUser, @PathVariable long idNewProject) {
-        System.out.println(transferUser.getUsername());
         ProjectUser pu = projectUserService.findById(transferUser.getId());
-
 
         ProjectUser newPu = new ProjectUser();
         Users users = userService.findUserByUsername(transferUser.getUsername());
@@ -90,13 +97,52 @@ public class ProjectManagementController {
         Projects projects = projectService.findById(idNewProject);
         newPu.setUserProject(projects);
         newPu.setIsPM((long) 0);
-        ProjectUser addNewPu = projectUserService.addUserProject(newPu);
-        if (addNewPu != null) {
+
+        if (projectUserService.findByMemberIdAndProId(users, projectService.findById(idNewProject)) == null) {
+            ProjectUser addNewPu = projectUserService.addUserProject(newPu);
             projectUserService.deletePro(pu);
+            return new ResponseEntity<ProjectUser>(
+                    addNewPu, HttpStatus.CREATED
+            );
         }
-        return new ResponseEntity<ProjectUser>(
-                addNewPu, HttpStatus.CREATED
+        return new ResponseEntity(new CustomErrorType("Lỗi"),HttpStatus.BAD_REQUEST);
+    }
+
+    Date date = new Date();
+    // tạo project
+    @PostMapping("/add-project")
+    public ResponseEntity<?> addNewProject(@RequestBody AddProjectDTO newProject){
+        System.out.println(newProject.getUsername());
+
+        Projects projects = new Projects();
+        projects.setName(newProject.getName());
+        projects.setDateStarted(date);
+        projects.setDateEnd(newProject.getDateEnd());
+        projects.setDescription(newProject.getDescriptions());
+        projects.setStatus((long)1);
+
+        Users users = userService.findUserByUsername(newProject.getUsername());
+
+
+        if(users == null){
+            return new ResponseEntity(
+                    new CustomErrorType("Dự án không có PM"),HttpStatus.BAD_REQUEST
+            );
+        }
+        Projects pro = projectService.addProject(projects);
+        ProjectUser projectUser = new ProjectUser();
+        projectUser.setIsPM((long) 1);
+        projectUser.setUserProject(pro);
+        projectUser.setProjectUser(users);
+        ProjectUser pu = projectUserService.addUserProject(projectUser);
+        return new ResponseEntity(
+          pro,HttpStatus.CREATED
         );
+    }
+
+    @GetMapping("/PM")
+    public List<String> allPM(){
+        return userService.findByPm();
     }
 
     //test

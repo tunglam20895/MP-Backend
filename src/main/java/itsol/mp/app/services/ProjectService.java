@@ -1,7 +1,6 @@
 package itsol.mp.app.services;
 
 import itsol.mp.app.dto.ProjectDTO;
-import itsol.mp.app.dto.TransferDTO;
 import itsol.mp.app.dto.UserProjectDTO;
 import itsol.mp.app.entities.Projects;
 import itsol.mp.app.repositories.ProjectRepository;
@@ -19,6 +18,10 @@ public class ProjectService {
         return projectRepository.getallProject();
     }
 
+    public Projects addProject(Projects projects){
+       return projectRepository.save(projects);
+    }
+
     public List<ProjectDTO> getProjectByPM(String username){
         return projectRepository.getProjectByPM(username);
     }
@@ -33,6 +36,10 @@ public class ProjectService {
 
     public List<Projects> getTransferProject(Long id){
         return projectRepository.findAllByIdNot(id);
+    }
+
+    public List<Projects> getProjectByUsername (String username){
+        return projectRepository.getProjectsByUsername(username);
     }
 
 }

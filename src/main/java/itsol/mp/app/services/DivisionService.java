@@ -15,4 +15,8 @@ public class DivisionService {
     public List<Divisons> getAllDivision(){
         return divisionRepository.findAll();
     }
+
+    public Divisons findById(long id){
+        return divisionRepository.findDivisonsById(id);
+    }
 }

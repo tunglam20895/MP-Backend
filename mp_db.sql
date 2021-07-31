@@ -39,6 +39,7 @@ create table users(
     day_off_last_year NUMBER,
     date_created DATE
     )
+    
 --Divison_project table
 create table divison_project(
     id NUMBER NOT NULL PRIMARY KEY,
@@ -153,4 +154,9 @@ create table issue_change_log(
     comments NVARCHAR2(2000)
 )
 
-drop table issue_change_log
+create table comments(
+id number primary key not null,
+owner number CONSTRAINT owner REFERENCES users(id),
+issuess_id  NUMBER CONSTRAINT issuess_id REFERENCES issues(id),
+content NVARCHAR2(1000)
+)

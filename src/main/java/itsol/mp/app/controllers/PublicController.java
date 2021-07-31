@@ -69,6 +69,7 @@ public class PublicController {
         newUser.setUserStatus(UserStatus.PENDING);
         newUser.setPassword(encoder.encode(newUser.getPassword()));
         newUser.setDateCreated(date);
+        newUser.setMiddleName("A");
         System.out.println();
         return new ResponseEntity<Users>(userService.addUser(newUser), HttpStatus.CREATED);
     }
@@ -122,9 +123,9 @@ public class PublicController {
         return new ResponseEntity<Users> (user, HttpStatus.OK);
     }
 
-   @GetMapping("/authorization")
-    public String author(){
-        return "authorization";
+   @GetMapping("/pm")
+    public List<String> author(){
+        return userService.findByPm();
    }
 
 }
