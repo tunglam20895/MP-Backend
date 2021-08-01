@@ -13,11 +13,13 @@ import java.util.List;
 public interface IssueRepository extends JpaRepository<Issues,Long> {
     void deleteById(Long aLong);
 
-    @Query("select new itsol.mp.app.dto.IssueDTO(i.id,i.issueProject,i.status,i.type,i.title,i.description,i.dateStrarted,i.soulution,i.progress,i.dateEnd,i.priority,u.username,u.role,i.dateUpdate,i.target) from Users u inner join ProjectUser pu on u.id = pu.projectUser inner join " +
+    Issues findById(long id);
+
+    @Query("select new itsol.mp.app.dto.IssueDTO(i.id,i.issueProject,i.userCreated,i.status,i.type,i.title,i.description,i.dateStrarted,i.soulution,i.progress,i.dateEnd,i.priority,u.username,u.role,i.dateUpdate,i.target) from Users u inner join ProjectUser pu on u.id = pu.projectUser inner join " +
             "Projects p on pu.userProject = p.id inner join Issues i on p.id = i.issueProject where u.role = 'ROLE_MEMBER' and u.username = :p_username" )
     List<IssueDTO> getIssuesByMember(@Param("p_username") String username);
 
-    @Query("select new itsol.mp.app.dto.IssueDTO(i.id,i.issueProject,i.status,i.type,i.title,i.description,i.dateStrarted,i.soulution,i.progress,i.dateEnd,i.priority,u.username,u.role,i.dateUpdate,i.target) from Users u inner join ProjectUser pu on u.id = pu.projectUser inner join " +
+    @Query("select new itsol.mp.app.dto.IssueDTO(i.id,i.issueProject,i.userCreated,i.status,i.type,i.title,i.description,i.dateStrarted,i.soulution,i.progress,i.dateEnd,i.priority,u.username,u.role,i.dateUpdate,i.target) from Users u inner join ProjectUser pu on u.id = pu.projectUser inner join " +
             "Projects p on pu.userProject = p.id inner join Issues i on p.id = i.issueProject where u.role = 'ROLE_PM' and u.username = :p_username" )
     List<IssueDTO> getIssuesByPM(@Param("p_username") String username);
 

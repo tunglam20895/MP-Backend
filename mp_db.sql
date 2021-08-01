@@ -140,23 +140,14 @@ create table issue_change_log(
     id NUMBER PRIMARY KEY NOT NULL,
     issues_id NUMBER CONSTRAINT issues_id REFERENCES issues(id),
     user_modified  NUMBER CONSTRAINT user_modified REFERENCES users(id),
-    title NVARCHAR2(100),
-    description NVARCHAR2(500),
-    change_date DATE,
-    start_date DATE,
-    due_date DATE,
-    target NUMBER,
-    priority NUMBER,
-    process NUMBER,
-    solution NVARCHAR2(2000),
-    time_spend NUMBER,
-    status NUMBER,
-    comments NVARCHAR2(2000)
+    dateChange date;
 )
 
 create table comments(
 id number primary key not null,
 owner number CONSTRAINT owner REFERENCES users(id),
 issuess_id  NUMBER CONSTRAINT issuess_id REFERENCES issues(id),
-content NVARCHAR2(1000)
+content NVARCHAR2(1000),
+date_comment date
+
 )

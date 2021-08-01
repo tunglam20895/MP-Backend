@@ -20,7 +20,7 @@ public class Issues {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "USER_CREATED",referencedColumnName = "ID")
     Users userCreated;
@@ -57,6 +57,10 @@ public class Issues {
     @JsonIgnore
     @OneToMany(mappedBy = "issueComment",fetch = FetchType.LAZY)
     Collection<Comments> comments;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "issueChangeLog",fetch = FetchType.LAZY)
+    Collection<IssueChangeLog> issueChangeLogs;
 
     @Column(name = "TYPE")
     String type;

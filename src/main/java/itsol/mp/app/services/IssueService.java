@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class IssueService {
@@ -16,6 +15,10 @@ public class IssueService {
 
     public Issues addIssue(Issues issues){
         return issueRepository.saveAndFlush(issues);
+    }
+
+    public  Issues updateIssues( Issues issues){
+        return issueRepository.save(issues);
     }
 
     public List<IssueDTO> getIssueByMember(String username){
@@ -34,7 +37,7 @@ public class IssueService {
          issueRepository.deleteById(id);
     }
 
-    public Optional<Issues> findById(long id){
+    public Issues findById(long id){
         return issueRepository.findById(id);
     }
 }

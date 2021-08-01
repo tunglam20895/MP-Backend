@@ -85,13 +85,6 @@ public class PublicController {
         return otp;
     }
 
-    @GetMapping("/hello")
-    public List<Users> getAll(){
-        logger.info("User type "+UserType.COLLABORATOR);
-        return userService.findAllUsers();
-    }
-
-
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassWord(@RequestBody ResetPasswordDTO resetPasswordDTO) throws MessagingException {
         Users user = userService.findUserByUsernameAndEmail(resetPasswordDTO.getUsername(),resetPasswordDTO.getEmail());
@@ -122,10 +115,5 @@ public class PublicController {
         javaMailSender.send(message);
         return new ResponseEntity<Users> (user, HttpStatus.OK);
     }
-
-   @GetMapping("/pm")
-    public List<String> author(){
-        return userService.findByPm();
-   }
 
 }

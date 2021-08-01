@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -31,4 +32,8 @@ public class Comments {
 
     @Column(name = "CONTENT")
     String content;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DATE_COMMENT")
+    Date dateComment;
 }

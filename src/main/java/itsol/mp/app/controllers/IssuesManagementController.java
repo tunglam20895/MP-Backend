@@ -1,10 +1,12 @@
 package itsol.mp.app.controllers;
 
 import itsol.mp.app.dto.AddIssueDTO;
+import itsol.mp.app.dto.CommentDTO;
+import itsol.mp.app.entities.Comments;
+import itsol.mp.app.entities.IssueChangeLog;
 import itsol.mp.app.entities.Issues;
-import itsol.mp.app.services.IssueService;
-import itsol.mp.app.services.ProjectService;
-import itsol.mp.app.services.UserService;
+import itsol.mp.app.entities.Users;
+import itsol.mp.app.services.*;
 import itsol.mp.app.utils.CustomErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,9 @@ public class IssuesManagementController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private IssueChangeLogService issueChangeLogService;
 
     // Lấy danh sách issue
     @GetMapping("/issues/{username}")
@@ -89,9 +94,92 @@ public class IssuesManagementController {
     //Xóa issue
     @DeleteMapping("/delete-issue/{id}")
     public void deleteIssue(@PathVariable long id){
-        if(issueService.findById(id) == null){
+        Issues issues = issueService.findById(id);
+        if(issues == null){
             return;
         }
+
+        commentService.deleteCmtByIssue(issues);
+        issueChangeLogService.deleteLogByIssue(issues);
         issueService.deleteIssueById(id);
+    }
+
+    @Autowired
+    private CommentService commentService;
+
+    //lấy danh sách cmt trong issue
+    @GetMapping("/comments/{id}")
+    public ResponseEntity<List<?>> getCmtByIssue(@PathVariable long id){
+
+        Issues issues = issueService.findById(id);
+        if(issueService.findById(id) == null){
+            return new ResponseEntity(
+             new CustomErrorType("issue không tồn tại"),HttpStatus.BAD_REQUEST
+            );
+
+        }
+        return new ResponseEntity<>(
+                commentService.getCmtByIssue(issues),HttpStatus.OK
+        );
+    }
+
+    //Tạo issue mới
+    @PostMapping("/create-comment")
+    public ResponseEntity<?> postCmt(@RequestBody CommentDTO commentDTO){
+        if(commentDTO.getContent() == null || commentDTO.getContent().trim().equals("")){
+            return new ResponseEntity<>(
+                    new CustomErrorType("Lỗi không có nội dung comment"),HttpStatus.BAD_REQUEST
+            );
+        }
+        Issues issues = issueService.findById(commentDTO.getIssueId());
+        Users users = userService.findUserByUsername(commentDTO.getUsername());
+        Comments comments = new Comments();
+        comments.setDateComment(date);
+        comments.setIssueComment(issues);
+        comments.setOwner(users);
+        comments.setContent(commentDTO.getContent());
+        return new ResponseEntity(
+                commentService.addCmt(comments),HttpStatus.CREATED
+        );
+    }
+
+    //update issue
+    @PostMapping("/update-issue/{username}")
+    public ResponseEntity<?> updateIssue(@RequestBody Issues issues,@PathVariable String username){
+        if(userService.findUserByUsername(username) == null || issues.getProgress() > 100){
+            return  new ResponseEntity<>(
+                    new CustomErrorType("User " + username + " không tồn tại"),HttpStatus.CONFLICT
+            );
+        }
+
+        IssueChangeLog issueChangeLog = new IssueChangeLog();
+        issueChangeLog.setIssueChangeLog(issueService.findById(issues.getId()));
+        issueChangeLog.setUsersModified(userService.findUserByUsername(username));
+        issueChangeLog.setDateChange(date);
+
+        issues.setDateUpdate(date);
+        Issues newIssue = issueService.updateIssues(issues);
+//        if(newIssue == null){
+//            return  new ResponseEntity<>(
+//                    new CustomErrorType("Không update được issue"),HttpStatus.CONFLICT
+//            );
+//        }
+        issueChangeLogService.addNewChange(issueChangeLog);
+
+        return new ResponseEntity<>(
+                newIssue,HttpStatus.CREATED
+        );
+    }
+
+    @GetMapping("/updaters/{id}")
+    public ResponseEntity<List<?>> getAllByIssue(@PathVariable long id){
+        if(issueService.findById(id) == null){
+            return new ResponseEntity(
+                    new CustomErrorType("Lỗi"),HttpStatus.BAD_REQUEST
+            );
+        }
+        return new ResponseEntity<>(
+                issueChangeLogService.finallByIssue(issueService.findById(id)),HttpStatus.OK
+        );
     }
 }

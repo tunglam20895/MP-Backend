@@ -19,6 +19,8 @@ public class IssueDTO {
 
     Projects issueProject;
 
+    Users userCreated;
+
     String status;
 
     String type;
